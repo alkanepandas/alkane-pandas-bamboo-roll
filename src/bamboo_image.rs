@@ -1,0 +1,1 @@
+pub const BAMBOO_IMAGE: &[u8] = include_bytes!("../bamboo.png"); 
