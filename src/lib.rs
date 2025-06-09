@@ -211,8 +211,8 @@ impl BambooRoll {
     let block_hash = self.block_hash()?;
     let txid_bytes = txid.as_byte_array();
 
-    let value = block_hash[31].wrapping_add(txid_bytes[31]);
-
+    let value = block_hash[31] ^ txid_bytes[31];
+    
     Ok(if value < 141 { 0 } else { 2 })
   }
 
