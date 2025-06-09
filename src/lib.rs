@@ -26,8 +26,8 @@ use bamboo_image::BAMBOO_IMAGE;
 const WIN_MULTIPLIER: u128 = 2;
 
 const BAMBOO_ALKANE_ID: AlkaneId = AlkaneId {
-  block: 0x2,
-  tx: 0x533,
+  block: 0x4,
+  tx: 0x0,
 };
 
 #[derive(Default)]
