@@ -1,6 +1,5 @@
 use metashrew_support::index_pointer::KeyValuePointer;
 use metashrew_support::compat::to_arraybuffer_layout;
-use metashrew_support::block::AuxpowBlock;
 use metashrew_support::utils::consensus_decode;
 
 use alkanes_runtime::{
@@ -15,10 +14,9 @@ use alkanes_support::{
 };
 
 use bitcoin::hashes::Hash;
-use bitcoin::{Txid, Block, Transaction};
+use bitcoin::{Txid, Transaction};
 
 use anyhow::{anyhow, Result};
-use std::io::Cursor;
 
 mod bamboo_image;
 use bamboo_image::BAMBOO_IMAGE;
@@ -69,7 +67,7 @@ impl Token for BambooRoll {
   }
 
   fn symbol(&self) -> String {
-    return String::from("BROLL");
+    return String::from("BAMBOOROLL");
   }
 }
 
@@ -208,21 +206,10 @@ impl BambooRoll {
   }
 
   fn calculate_random_multiplier(&self, txid: &Txid) -> Result<u128> {
-    let block_hash = self.block_hash()?;
-    let txid_bytes = txid.as_byte_array();
-
-    let value = block_hash[31] ^ txid_bytes[31];
+    // merkle[31] ^ txid[31]
+    let value = self.block()[67] ^ txid.as_byte_array()[31];
     
     Ok(if value < 141 { 0 } else { 2 })
-  }
-
-  fn current_block(&self) -> Result<Block> {
-    Ok(AuxpowBlock::parse(&mut Cursor::<Vec<u8>>::new(self.block()))?.to_consensus())
-  }
-
-  fn block_hash(&self) -> Result<Vec<u8>> {
-    let hash = self.current_block()?.block_hash().as_byte_array().to_vec();
-    Ok(hash)
   }
 
   fn transaction_id(&self) -> Result<Txid> {
